@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VOLTAS CMMS</title>
+    <meta name="theme-color" content="#0b1220" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="VOLTAS CMMS" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div id="app">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand__logo">V</div>
+          <div class="brand__text">
+            <div class="brand__name">VOLTAS</div>
+            <div class="brand__sub">Enterprise CMMS</div>
+          </div>
+        </div>
+        <div class="topbar__right">
+          <div id="whoami" class="chip chip--muted"></div>
+          <button id="btnLogout" class="btn btn--ghost btn--sm" type="button">Logout</button>
+        </div>
+      </header>
+
+      <main class="main">
+        <!-- LOGIN -->
+        <section id="viewLogin" class="view">
+          <div class="card card--center glass">
+            <h1>Sign in</h1>
+            <p class="muted">Secure maintenance operations platform</p>
+
+            <form id="loginForm" class="form">
+              <label class="field">
+                <span>Email</span>
+                <input id="loginEmail" type="email" autocomplete="username" required />
+              </label>
+              <label class="field">
+                <span>Password</span>
+                <input id="loginPassword" type="password" autocomplete="current-password" required />
+              </label>
+              <div class="row">
+                <button class="btn btn--primary" type="submit">Login</button>
+                <button id="btnDemo" class="btn" type="button">Demo mode</button>
+              </div>
+              <div id="loginError" class="error"></div>
+              <div class="hint">
+                Default users are documented in the README (created after backend initialization).
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <!-- APP -->
+        <section id="viewApp" class="view">
+          <nav class="nav glass">
+            <button class="nav__item" data-route="dashboard">Dashboard</button>
+            <button class="nav__item" data-route="daily">Daily Job Done</button>
+            <button class="nav__item" data-route="workorders">Work Orders</button>
+            <button id="navUsers" class="nav__item" data-route="users" style="display:none">Users</button>
+          </nav>
+
+          <section id="routeDashboard" class="route">
+            <div class="route__head">
+              <h2>Dashboard</h2>
+              <div class="row">
+                <label class="field field--inline">
+                  <span>Date</span>
+                  <input id="dashDate" type="date" />
+                </label>
+                <button id="btnRefreshDash" class="btn btn--sm" type="button">Refresh</button>
+              </div>
+            </div>
+
+            <div class="grid">
+              <div class="kpi card glass">
+                <div class="kpi__label">Total Jobs</div>
+                <div id="kpiTotal" class="kpi__value">—</div>
+              </div>
+              <div class="kpi card glass">
+                <div class="kpi__label">Pending</div>
+                <div id="kpiPending" class="kpi__value">—</div>
+              </div>
+              <div class="kpi card glass">
+                <div class="kpi__label">In Progress</div>
+                <div id="kpiInProgress" class="kpi__value">—</div>
+              </div>
+              <div class="kpi card glass">
+                <div class="kpi__label">Waiting for Parts</div>
+                <div id="kpiWaiting" class="kpi__value">—</div>
+              </div>
+              <div class="kpi card glass">
+                <div class="kpi__label">Completed</div>
+                <div id="kpiCompleted" class="kpi__value">—</div>
+              </div>
+              <div class="kpi card glass">
+                <div class="kpi__label">Supervisor Approved</div>
+                <div id="kpiApproved" class="kpi__value">—</div>
+              </div>
+            </div>
+
+            <div class="card glass">
+              <div class="row row--between">
+                <h3 class="m0">Daily summary</h3>
+                <div id="dashMeta" class="muted"></div>
+              </div>
+              <div id="dashTable" class="table"></div>
+            </div>
+          </section>
+
+          <section id="routeDaily" class="route">
+            <div class="route__head">
+              <h2>Daily Job Done</h2>
+              <div class="row">
+                <button id="btnNewDaily" class="btn btn--primary btn--sm" type="button">New entry</button>
+                <button id="btnReloadDaily" class="btn btn--sm" type="button">Reload</button>
+              </div>
+            </div>
+
+            <div class="card glass">
+              <div class="row wrap">
+                <label class="field field--inline">
+                  <span>Date</span>
+                  <input id="dailyFilterDate" type="date" />
+                </label>
+                <label class="field field--inline">
+                  <span>Status</span>
+                  <select id="dailyFilterStatus"></select>
+                </label>
+                <label class="field field--inline">
+                  <span>Technician</span>
+                  <input id="dailyFilterTech" type="text" placeholder="Name contains…" />
+                </label>
+                <button id="btnApplyDailyFilters" class="btn btn--sm" type="button">Apply</button>
+              </div>
+              <div id="dailyTable" class="table"></div>
+            </div>
+          </section>
+
+          <section id="routeWorkOrders" class="route">
+            <div class="route__head">
+              <h2>Work Orders</h2>
+              <div class="row">
+                <button id="btnNewWO" class="btn btn--primary btn--sm" type="button">New work order</button>
+                <button id="btnReloadWO" class="btn btn--sm" type="button">Reload</button>
+              </div>
+            </div>
+
+            <div class="card glass">
+              <div class="row wrap">
+                <label class="field field--inline">
+                  <span>Status</span>
+                  <select id="woFilterStatus"></select>
+                </label>
+                <label class="field field--inline">
+                  <span>Assigned to</span>
+                  <input id="woFilterTech" type="text" placeholder="Name contains…" />
+                </label>
+                <button id="btnApplyWOFilters" class="btn btn--sm" type="button">Apply</button>
+              </div>
+              <div id="woTable" class="table"></div>
+            </div>
+          </section>
+
+          <section id="routeUsers" class="route">
+            <div class="route__head">
+              <h2>User Management</h2>
+              <div class="row">
+                <button id="btnNewUser" class="btn btn--primary btn--sm" type="button">Add user</button>
+                <button id="btnReloadUsers" class="btn btn--sm" type="button">Reload</button>
+              </div>
+            </div>
+
+            <div class="card glass">
+              <div id="usersTable" class="table"></div>
+            </div>
+          </section>
+        </section>
+
+        <!-- MODAL -->
+        <div id="modal" class="modal hidden" role="dialog" aria-modal="true">
+          <div class="modal__backdrop" data-close="1"></div>
+          <div class="modal__panel glass">
+            <div class="row row--between">
+              <h3 id="modalTitle" class="m0">Modal</h3>
+              <button class="btn btn--ghost btn--sm" type="button" data-close="1">Close</button>
+            </div>
+            <div id="modalBody" class="modal__body"></div>
+          </div>
+        </div>
+      </main>
+
+      <footer class="footer muted">
+        VOLTAS Enterprise CMMS — Mobile-first, offline-friendly (v1 scaffold)
+      </footer>
+    </div>
+
+    <script src="./config.js"></script>
+    <script src="./js/utils.js"></script>
+    <script src="./js/api.js"></script>
+    <script src="./js/auth.js"></script>
+    <script src="./js/app.js"></script>
+  </body>
+</html>
